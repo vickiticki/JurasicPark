@@ -48,6 +48,14 @@ namespace JurasicPark
         // If transfer
         // Ask for name and where to go
         // and transfer
+        public void TransferDinosaur(string name, int newHome)
+        {
+            var dinosaurToTransfer = dinosaurs.First(dino => dino.Name == name);
+            dinosaurToTransfer.EnclosureNumber = newHome;
+
+
+        }
+
         // If summary
         // display carnivores and herbivores
         public void SummaryTime()
@@ -79,20 +87,22 @@ namespace JurasicPark
         {
             Console.Write(prompt);
             var userInput = Console.ReadLine().ToUpper();
-            //switch (userInput)
+            string thatDiet = "something bad happened";
             switch (userInput)
             {
                 case "C":
-                    return "Carnivore";
+                    thatDiet = "carnivore";
                     break;
                 case "H":
-                    return "Herbivore";
+                    thatDiet = "herbivore";
                     break;
                 default:
                     Console.WriteLine("Invalid food type");
-                    return "unknown";
+                    thatDiet = "unknown";
                     break;
+
             }
+            return thatDiet;
 
 
         }
@@ -131,19 +141,24 @@ namespace JurasicPark
                 switch (choice)
                 {
                     case "V":
-                        Console.WriteLine("View dino");
+                        Console.WriteLine();
                         var dinosaurs = database.GetAllDinosaurs();
 
-                        foreach (var dino in dinosaurs)
-
+                        if (dinosaurs.Count == 0)
                         {
-                            Console.WriteLine();
-                            // Vicki: READ INSTRUCTIONS BETTER
-                            // Console.WriteLine($"The dinosaur {dino.Name} eats a {dino.DietType} diet.");
-                            // Console.WriteLine($"It weighs {dino.Weight} pounds and lives in Enclosure {dino.EnclosureNumber}.");
-                            // Console.WriteLine($"It was acquired at {dino.WhenAcquired}.");
-                            Console.WriteLine(dino.Description());
+                            Console.WriteLine("There are no dinosaurs.");
+                        }
+                        else
+                        {
 
+                            var dinosInOrder = dinosaurs.OrderBy(dino => dino.WhenAcquired);
+                            foreach (var dino in dinosaurs)
+
+                            {
+
+                                Console.WriteLine(dino.Description());
+
+                            }
                         }
                         break;
                     case "A":
@@ -171,6 +186,7 @@ namespace JurasicPark
                         string dinoToTransfer = Console.ReadLine();
                         int transferEnclosure = PromptForInt("To which enclosure? ");
                         //and transfer
+                        database.TransferDinosaur(dinoToTransfer, transferEnclosure);
 
                         break;
                     case "S":
