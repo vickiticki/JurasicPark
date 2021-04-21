@@ -9,9 +9,15 @@ namespace JurasicPark
     {
         public string Name { get; set; }
         public string DietType { get; set; }
-        // read up on datetime
-        // public int Weight { get; set; }
-        // public int EnclosureNumber { get; set; }
+        public DateTime WhenAcquired { get; set; }
+        public int Weight { get; set; }
+        public int EnclosureNumber { get; set; }
+        public string Description()
+        {
+            string desMartin = $"{Name} was acquired at {WhenAcquired}. It eats a {DietType} diet, weighs {Weight} pounds, and lives in enclosure {EnclosureNumber}.";
+            return desMartin;
+        }
+
 
     }
     class DinosaurDatabase
@@ -19,11 +25,12 @@ namespace JurasicPark
         private List<Dinosaur> dinosaurs = new List<Dinosaur>();
 
         // If view
+        // List all dinos
         public List<Dinosaur> GetAllDinosaurs()
         {
             return dinosaurs;
         }
-        // List all dinos
+
         // If add
         // Ask for name, diet, weight, and enclosure
         public void AddDinosaur(Dinosaur newDinosaur)
@@ -32,10 +39,30 @@ namespace JurasicPark
         }
         // If remove
         // Ask for name and remove
+        public void RemoveDinosaur(string dinosaurToRemove)
+        {
+            dinosaurs.RemoveAll(dino => dino.Name == dinosaurToRemove);
+
+        }
+
         // If transfer
         // Ask for name and where to go
+        // and transfer
         // If summary
-        // Ask for name and give summary
+        // display carnivores and herbivores
+        public void SummaryTime()
+        {
+            var numberOfCarnivores = dinosaurs.Count(dino => dino.DietType == "Carnivore");
+            var numberOfHerbivores = dinosaurs.Count(dino => dino.DietType == "Herbivore");
+            var numberLeftOver = dinosaurs.Count(dino => dino.DietType == "unknown");
+            string theSummary = $"There are {numberOfCarnivores} carnivores and {numberOfHerbivores} herbivores (and {numberLeftOver} not known.)";
+            Console.WriteLine(theSummary);
+        }
+
+
+
+
+
 
 
     }
@@ -69,6 +96,21 @@ namespace JurasicPark
 
 
         }
+        static int PromptForInt(string prompt)
+        {
+            Console.Write(prompt);
+            int userInput;
+            var isThisInteger = Int32.TryParse(Console.ReadLine(), out userInput);
+            if (isThisInteger)
+            {
+                return userInput;
+            }
+            else
+            {
+                Console.WriteLine("Not a valid answer. Entering 0.");
+                return 0;
+            }
+        }
         static void Main(string[] args)
         {
             var database = new DinosaurDatabase();
@@ -82,7 +124,7 @@ namespace JurasicPark
 
                 Console.WriteLine();
                 Console.WriteLine("What would you like to do?");
-                Console.WriteLine("(V)iew all dinosaurs, (A)dd a dinosaur, (R)emove a dinosaur, (T)ransfer a dinosaur, see a (S)ummary, or (Q)uit.");
+                Console.WriteLine("(V)iew all dinosaurs, (A)dd a dinosaur, (R)emove a dinosaur, (T)ransfer a dinosaur, see a (S)ummary of carnivores and herbivores, or (Q)uit.");
                 var choice = Console.ReadLine().ToUpper();
                 Console.WriteLine();
 
@@ -93,28 +135,47 @@ namespace JurasicPark
                         var dinosaurs = database.GetAllDinosaurs();
 
                         foreach (var dino in dinosaurs)
+
                         {
-                            Console.WriteLine($"The dinosaur {dino.Name} has a diet of {dino.DietType}");
+                            Console.WriteLine();
+                            // Console.WriteLine($"The dinosaur {dino.Name} eats a {dino.DietType} diet.");
+                            // Console.WriteLine($"It weighs {dino.Weight} pounds and lives in Enclosure {dino.EnclosureNumber}.");
+                            // Console.WriteLine($"It was acquired at {dino.WhenAcquired}.");
+                            Console.WriteLine(dino.Description());
+
                         }
                         break;
                     case "A":
-                        Console.WriteLine("Add dino");
                         // Make a new dino object
                         var dinosaur = new Dinosaur();
                         // Ask for name, diet, weight, and enclosure
                         dinosaur.Name = PromptForName("What is the dinosaur's name? ");
-                        dinosaur.DietType = PromptForDiet("Is the dinosaur a (C)arnivore or (Herbivore)? ");
+                        dinosaur.DietType = PromptForDiet("Is the dinosaur a (C)arnivore or (H)erbivore? ");
+                        dinosaur.Weight = PromptForInt("How much does the dinosaur weigh? ");
+                        dinosaur.EnclosureNumber = PromptForInt("What enclosure will you put the dinosaur in? ");
+                        dinosaur.WhenAcquired = DateTime.Now;
                         // Add it to the list
                         database.AddDinosaur(dinosaur);
                         break;
                     case "R":
-                        Console.WriteLine("Remove dino");
+                        //ask for name
+                        Console.Write("Who would you like to remove? ");
+                        string byeDino = Console.ReadLine();
+                        //and remove
+                        database.RemoveDinosaur(byeDino);
                         break;
                     case "T":
-                        Console.WriteLine("Transfer dino");
+                        //ask for name and new enclosure
+                        Console.Write("Who do you want to transfer? ");
+                        string dinoToTransfer = Console.ReadLine();
+                        int transferEnclosure = PromptForInt("To which enclosure? ");
+                        //and transfer
+
                         break;
                     case "S":
-                        Console.WriteLine("Summary dino");
+
+                        database.SummaryTime();
+
                         break;
                     case "Q":
                         Console.WriteLine("Quit");
