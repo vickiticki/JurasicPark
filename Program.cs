@@ -138,6 +138,7 @@ namespace JurasicPark
 
                         {
                             Console.WriteLine();
+                            // Vicki: READ INSTRUCTIONS BETTER
                             // Console.WriteLine($"The dinosaur {dino.Name} eats a {dino.DietType} diet.");
                             // Console.WriteLine($"It weighs {dino.Weight} pounds and lives in Enclosure {dino.EnclosureNumber}.");
                             // Console.WriteLine($"It was acquired at {dino.WhenAcquired}.");
