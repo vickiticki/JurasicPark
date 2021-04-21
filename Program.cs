@@ -155,21 +155,46 @@ namespace JurasicPark
                     case "V":
                         Console.WriteLine();
                         var dinosaurs = database.GetAllDinosaurs();
+                        var dinosInOrder = dinosaurs.OrderBy(dino => dino.WhenAcquired);
 
-                        if (dinosaurs.Count == 0)
+                        Console.WriteLine("View (A)ll or in a specific (E)nclosure?");
+                        var whatToView = Console.ReadLine().ToUpper();
+
+                        if (whatToView == "E")
                         {
-                            Console.WriteLine("There are no dinosaurs.");
+                            var spot = PromptForInt("Which enclosure? ");
+                            var dinosInSpot = dinosaurs.Where(dino => dino.EnclosureNumber == spot);
+                            var numberOfDinosInSpot = dinosaurs.Count(dino => dino.EnclosureNumber == spot);
+                            if (numberOfDinosInSpot == 0)
+                            {
+                                Console.WriteLine($"There are no dinosaurs in enclosure {spot}");
+                            }
+                            else
+                            {
+                                foreach (var dino in dinosInSpot)
+                                {
+                                    Console.WriteLine(dino.Description());
+                                    Console.WriteLine();
+                                }
+                            }
+
                         }
                         else
                         {
-
-                            var dinosInOrder = dinosaurs.OrderBy(dino => dino.WhenAcquired);
-                            foreach (var dino in dinosaurs)
-
+                            if (dinosaurs.Count == 0)
+                            {
+                                Console.WriteLine("There are no dinosaurs.");
+                            }
+                            else
                             {
 
-                                Console.WriteLine(dino.Description());
+                                foreach (var dino in dinosaurs)
 
+                                {
+                                    Console.WriteLine(dino.Description());
+                                    Console.WriteLine();
+
+                                }
                             }
                         }
                         break;
