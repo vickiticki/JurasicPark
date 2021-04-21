@@ -35,6 +35,16 @@ namespace JurasicPark
         // Ask for name, diet, weight, and enclosure
         public void AddDinosaur(Dinosaur newDinosaur)
         {
+            // change name if name already exists
+            int newNumb = dinosaurs.Count(dino => dino.Name == newDinosaur.Name) + 1;
+            string num = newNumb.ToString();
+            foreach (var dino in dinosaurs)
+            {
+                if (newDinosaur.Name == dino.Name)
+                {
+                    newDinosaur.Name = newDinosaur.Name + num;
+                }
+            }
             dinosaurs.Add(newDinosaur);
         }
         // If remove
@@ -80,6 +90,8 @@ namespace JurasicPark
         {
             Console.Write(prompt);
             var userInput = Console.ReadLine();
+            //if name already exists, change it
+
             return userInput;
 
         }
@@ -166,6 +178,7 @@ namespace JurasicPark
                         var dinosaur = new Dinosaur();
                         // Ask for name, diet, weight, and enclosure
                         dinosaur.Name = PromptForName("What is the dinosaur's name? ");
+
                         dinosaur.DietType = PromptForDiet("Is the dinosaur a (C)arnivore or (H)erbivore? ");
                         dinosaur.Weight = PromptForInt("How much does the dinosaur weigh? ");
                         dinosaur.EnclosureNumber = PromptForInt("What enclosure will you put the dinosaur in? ");
